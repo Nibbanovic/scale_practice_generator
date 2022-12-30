@@ -1,6 +1,5 @@
 scale_name_formulas = {
     "Ionian": "wwhwwwh",
-    "Ionian2": "1 2 b3 4 5 b6 b7",
     "Dorian": "whwwwhw",
     "Phrygian": "hwwwhww",
     "Aeolian": "whwwhww",
@@ -19,7 +18,7 @@ def parse_scale_name(scale_name):
     accidental = ('' if len(root_and_accidental) < 2
                   else root_and_accidental[1])
 
-    root = root_and_accidental[0]
+    root = root_and_accidental[0
     scale_formula = scale_name_formulas[scale_type]
 
     return root, accidental, scale_formula
@@ -43,10 +42,8 @@ def spell_scale(scale_name):    # e.g. "C# Ionian"
                                       else 0)
     base_root_index = base_notes.index(root)
 
-
     base_notes_rearranged = base_notes[base_root_index:] + base_notes[:base_root_index]
     machine_scale = generate_notes(scale_formula, root_index)       # scale number as the machine sees it
-
 
     spelled_scale = []
     for base_note, machine_note_index in zip(base_notes_rearranged, machine_scale):
@@ -55,14 +52,15 @@ def spell_scale(scale_name):    # e.g. "C# Ionian"
         if notes_index < notes.index(base_notes_rearranged[0]):
             notes_index += len(notes)
 
-        num_accidentals = abs(machine_note_index - notes_index)
+        num_accidentals = machine_note_index - notes_index
 
-        spelled_scale.append(base_note + num_accidentals*accidental)
-
+        spelled_scale.append(base_note + abs(num_accidentals)*('#' if num_accidentals > 0 else
+                                                               'b' if num_accidentals < 0 else
+                                                               ''))
     return spelled_scale
 
 
-print(spell_scale("D# Lydian"))
+print(spell_scale("Db Phrygian"))
 
 
 
