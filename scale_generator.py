@@ -18,7 +18,7 @@ def parse_scale_name(scale_name):
     accidental = ('' if len(root_and_accidental) < 2
                   else root_and_accidental[1])
 
-    root = root_and_accidental[0
+    root = root_and_accidental[0]
     scale_formula = scale_name_formulas[scale_type]
 
     return root, accidental, scale_formula
