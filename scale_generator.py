@@ -1,3 +1,5 @@
+from colored import fg, bg, attr
+
 scale_name_formulas = {
     "Ionian": "wwhwwwh",
     "Dorian": "whwwwhw",
