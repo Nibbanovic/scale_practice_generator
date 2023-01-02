@@ -1,0 +1,10 @@
+u prikaz skale dodaj obojane kvadratice kao u color test
+
+napravi da generira random skalu
+
+napravi da ispisuje skalu notu po notu
+
+i onda ispisuje redom nekim tempom
+
+
+

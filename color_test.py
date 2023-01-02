@@ -19,7 +19,7 @@ note_colors = {
 
 def print_with_style(text, style):
     reset = attr("reset")
-    print(style + ' ' + text + ' ' + reset, end='')
+    print(style + text + reset, end='')
 
 
 
@@ -29,8 +29,10 @@ for note in note_colors.items():
     style = fg(color) + bg('#ffffff') + attr("bold")
     symbol = '\u25A0' if shape == "square" else '\u25CF'
 
+    print_with_style(' ', style)
     print_with_style(note[0], style)
     print_with_style(symbol, style)
+    print_with_style(' ', style)
 
 print('\n')
 
