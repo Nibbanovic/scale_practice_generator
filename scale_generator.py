@@ -1,4 +1,5 @@
 from colored import fg as foreground, bg as background, attr
+import random
 
 SCALE_NAME_FORMULAS = {
     "Ionian": "wwhwwwh",
@@ -8,8 +9,12 @@ SCALE_NAME_FORMULAS = {
     "Lydian": "wwwhwwh",
 }
 
+def get_key_from_value(my_dict, value):
+    return list(my_dict.keys())[
+        list(my_dict.values()).index(value)
+    ]
+
 CHROMATIC_WITH_SYMBOL = {
-    #mogao bi i stavit da su (parni + 0) krugovi, a neparni kvadrati -> ovako je opširniji kod, ali jasniji
     'A': 'circle #fcbd27',
     'a': 'square #89489a',
     'B': 'circle #aad04a',
@@ -27,14 +32,25 @@ CHROMATIC = list(CHROMATIC_WITH_SYMBOL.keys())
 COLORS = list(CHROMATIC_WITH_SYMBOL.values())
 
 NATURAL_NOTES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', ]
+ACCIDENTALS = ['#', 'b', '']
 
 
 class Scale:
-    def __init__(self, scale_name):  # e.g. "C# Ionian"
+    def __init__(self, scale_name="random"):  # e.g. "C# Ionian"
 
-        (self.natural_note,
-         self.accidental,
-         self.scale_formula) = self.parse_scale_name(scale_name)
+        if scale_name == "random":
+            self.natural_note = random.choice(NATURAL_NOTES)
+            self.accidental = random.choice(ACCIDENTALS)
+            self.scale_formula = random.choice(list(SCALE_NAME_FORMULAS.values()))
+            self.scale_name = (self.natural_note
+                               + self.accidental
+                               + ' '
+                               + get_key_from_value(SCALE_NAME_FORMULAS, self.scale_formula))
+        else:
+            (self.natural_note,
+             self.accidental,
+             self.scale_formula) = self.parse_scale_name(scale_name)
+            self.scale_name = scale_name
 
         natural_note_index = self.locate_in_chromatic(self.natural_note, self.accidental)
         natural_notes_rearranged = self.rearrange_natural_notes(starting_from=self.natural_note)
@@ -45,7 +61,6 @@ class Scale:
 
     def print_scale(self):
         for note, chromatic_index in zip(self.scale_notes, self.chromatic_indices):
-
             symbol, style = self.get_symbol_and_style(chromatic_index)
 
             self.print_with_style(' ', style)
@@ -70,7 +85,7 @@ class Scale:
     def locate_in_chromatic(natural_note, accidental):
         return CHROMATIC.index(natural_note) + (1 if accidental == '#'
                                                 else -1 if accidental == 'b'
-                                                else 0)
+        else 0)
 
     @staticmethod
     def rearrange_natural_notes(starting_from):
@@ -130,4 +145,10 @@ class Scale:
         return symbol, style
 
 
-test_scale = Scale("G Phrygian").print_scale()
+while True:
+    test_scale = Scale()
+    print(test_scale.scale_name)
+    test_scale.print_scale()
+    input("> ")
+
+
