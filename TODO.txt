@@ -1,3 +1,5 @@
+pretvori u klasu
+
 u prikaz skale dodaj obojane kvadratice kao u color test
 
 napravi da generira random skalu
