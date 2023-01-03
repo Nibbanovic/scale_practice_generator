@@ -1,3 +1,5 @@
+from colored import fg as foreground, bg as background, attr
+
 SCALE_NAME_FORMULAS = {
     "Ionian": "wwhwwwh",
     "Dorian": "whwwwhw",
@@ -6,9 +8,25 @@ SCALE_NAME_FORMULAS = {
     "Lydian": "wwwhwwh",
 }
 
-NATURAL_NOTES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', ]
+CHROMATIC_WITH_SYMBOL = {
+    #mogao bi i stavit da su (parni + 0) krugovi, a neparni kvadrati -> ovako je opširniji kod, ali jasniji
+    'A': 'circle #fcbd27',
+    'a': 'square #89489a',
+    'B': 'circle #aad04a',
+    'C': 'square #dd2a51',
+    'c': 'circle #00ac99',
+    'D': 'square #f78932',
+    'd': 'circle #426bb0',
+    'E': 'square #f4de22',
+    'F': 'circle #ae2c8f',
+    'f': 'square #42b956',
+    'G': 'circle #f25730',
+    'g': 'square #009dd9',
+}
+CHROMATIC = list(CHROMATIC_WITH_SYMBOL.keys())
+COLORS = list(CHROMATIC_WITH_SYMBOL.values())
 
-CHROMATIC = ['A', 'a', 'B', 'C', 'c', 'D', 'd', 'E', 'F', 'f', 'G', 'g']
+NATURAL_NOTES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', ]
 
 
 class Scale:
@@ -20,13 +38,22 @@ class Scale:
 
         natural_note_index = self.locate_in_chromatic(self.natural_note, self.accidental)
         natural_notes_rearranged = self.rearrange_natural_notes(starting_from=self.natural_note)
-        chromatic_indices = self.find_indices_in_chromatic(starting_from=natural_note_index,
-                                                           scale_formula=self.scale_formula)
+        self.chromatic_indices = self.find_indices_in_chromatic(starting_from=natural_note_index,
+                                                                scale_formula=self.scale_formula)
 
-        self.scale_notes = self.get_scale_notes(natural_notes_rearranged, chromatic_indices)
+        self.scale_notes = self.get_scale_notes(natural_notes_rearranged, self.chromatic_indices)
 
     def print_scale(self):
-        print(self.scale_notes)
+        for note, chromatic_index in zip(self.scale_notes, self.chromatic_indices):
+
+            symbol, style = self.get_symbol_and_style(chromatic_index)
+
+            self.print_with_style(' ', style)
+            self.print_with_style(note, style)
+            self.print_with_style(symbol, style)
+            self.print_with_style(' ', style)
+
+        print('\n')
 
     @staticmethod
     def parse_scale_name(scale_name):
@@ -85,11 +112,22 @@ class Scale:
     def is_new_octave(natural_note_chromatic_index, starting_natural_note_chromatic_index):
         return natural_note_chromatic_index < starting_natural_note_chromatic_index
 
+    @staticmethod
+    def print_with_style(text, style):
+        reset = attr("reset")
+        print(style + text + reset, end='')
 
-test_scale = Scale("Db Phrygian")
-test_scale.print_scale()
-print(test_scale)
-print(test_scale.scale_notes)
+    @staticmethod
+    def get_symbol_and_style(chromatic_index):
+        note_style = COLORS[chromatic_index % len(COLORS)]
+        shape, color = note_style.split()
+
+        style = foreground(color) + background('white') + attr('bold')
+        symbol = ('\u25A0' if shape == "square" else
+                  '\u25CF' if shape == "circle" else
+                  '??')
+
+        return symbol, style
 
 
-
+test_scale = Scale("G Phrygian").print_scale()
